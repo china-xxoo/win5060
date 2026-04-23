@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备控制</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        button {
+            flex: 1;
+            padding: 22px 0;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+        }
+        #on {
+            background: #22c55e;
+        }
+        #off {
+            background: #ef4444;
+        }
+        .log {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #333;
+            min-height: 70px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="btn-group">
+            <button id="on">开启设备</button>
+            <button id="off">关闭设备</button>
+        </div>
+
+        <div class="log" id="log">等待操作...</div>
+    </div>
+
+    <script>
+        const API = "https://pt.feiyangkeji.com/api/device/setstate/tovYyUxXANTpZfuq/CZnzcHgAfw001";
+        const log = document.getElementById("log");
+
+        async function set(cmd) {
+            log.textContent = "⏳ 指令发送中...";
+            try {
+                await fetch(API, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: "state=" + cmd
+                });
+                log.textContent = cmd === "on" ? "✅ 已发送开启指令" : "❌ 已发送关闭指令";
+            } catch (e) {
+                log.textContent = "⚠️ 请在手机浏览器或微信内打开使用";
+            }
+        }
+
+        document.getElementById("on").onclick = () => set("on");
+        document.getElementById("off").onclick = () => set("off");
+    </script>
+</body>
+</html>
